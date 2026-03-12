@@ -316,7 +316,7 @@ async function loadData() {
   try {
     const [{ data: players, error: pe }, { data: questions, error: qe }] = await Promise.all([
       db.from('players').select('*').order('id'),
-      db.from('questions').select('*'),
+      db.from('questionstwo').select('*'),
     ]);
     if (pe) throw pe; if (qe) throw qe;
     G.allPlayers = players || [];
