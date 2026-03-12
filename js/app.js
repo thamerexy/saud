@@ -346,11 +346,11 @@ function startRound() {
 
 function renderWheel() {
   const canvas = document.getElementById('wheel-canvas');
-  const size = Math.min(canvas.parentElement.offsetWidth, canvas.parentElement.offsetHeight);
-  canvas.width = size || 400; canvas.height = size || 400;
+  const wrapper = canvas.parentElement;
+  const size = Math.min(wrapper.clientWidth, wrapper.clientHeight) || 360;
+  canvas.width = size; canvas.height = size;
   if (!G.wheel) G.wheel = new SpinningWheel(canvas);
-  G.wheel.canvas = canvas;
-  G.wheel.ctx = canvas.getContext('2d');
+  else { G.wheel.canvas = canvas; G.wheel.ctx = canvas.getContext('2d'); }
   G.wheel.setPlayers(G.activePlayers);
 }
 

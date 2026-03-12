@@ -99,7 +99,7 @@ body {
   font-size: clamp(42px, 13vmin, 80px);
   font-weight: 900;
   background: linear-gradient(135deg, var(--gold), #fff, var(--gold2));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
   text-shadow: none;
   letter-spacing: 2px;
 }
@@ -341,12 +341,12 @@ body {
   display: flex; align-items: center; justify-content: center;
   width: 100%;
   padding: 0 clamp(12px, 3vw, 24px);
+  min-height: 0;
 }
 .wheel-wrapper {
   position: relative;
-  width: min(100%, 100vh - 180px);
-  aspect-ratio: 1;
-  max-width: min(450px, 80vmin);
+  width: min(80vmin, 450px);
+  height: min(80vmin, 450px);
 }
 .wheel-pointer {
   position: absolute;
@@ -392,7 +392,7 @@ body {
   font-size: clamp(22px, 6vmin, 38px);
   font-weight: 900;
   background: linear-gradient(135deg, var(--gold), var(--gold2));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
 }
 .question-about-label {
   font-size: clamp(12px, 3vmin, 16px);
@@ -616,7 +616,7 @@ body {
   font-size: clamp(36px, 11vmin, 70px);
   font-weight: 900;
   background: linear-gradient(135deg, var(--gold), #fff, var(--gold2));
-  -webkit-background-clip: text;
+  -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: winner-glow 1.5s ease-in-out infinite alternate;
 }
