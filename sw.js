@@ -1,11 +1,15 @@
-const CACHE = 'saud-v1';
+const CACHE = 'saud-v2';
 const ASSETS = [
-  '/', '/index.html', '/css/style.css',
-  '/js/app.js', '/icons/icon-192.png', '/icons/icon-512.png'
+  '/saud/',
+  '/saud/index.html',
+  '/saud/css/style.css',
+  '/saud/js/app.js',
+  '/saud/icons/icon-192.png',
+  '/saud/icons/icon-512.png'
 ];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS).catch(() => {})));
   self.skipWaiting();
 });
 
@@ -17,8 +21,7 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // Network first for Supabase, cache first for assets
-  if (e.request.url.includes('supabase.co')) {
+  if (e.request.url.includes('supabase.co') || e.request.url.includes('fonts.')) {
     e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
   } else {
     e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
