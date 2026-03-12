@@ -1,7 +1,7 @@
 {
-  "name": "سعود - لعبة الأسئلة",
-  "short_name": "سعود",
-  "description": "لعبة أسئلة تنافسية بالإقصاء بين الأصدقاء والعائلة",
+  "name": "سؤال مع سعود",
+  "short_name": "سؤال مع سعود",
+  "description": "لعبة أسئلة تنافسية مع سعود",
   "start_url": "/saud/",
   "scope": "/saud/",
   "display": "standalone",
