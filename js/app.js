@@ -519,12 +519,17 @@ function triggerSuddenDeath(players) {
 
 function showSuddenDeathQuestion() {
   soundClick(); initAudio();
-  const available = G.allQuestions.filter(q => !G.usedQIds.has(q.id));
+  const selectedIds = new Set(G.selectedPlayers.map(p => p.id));
+  const available = G.allQuestions.filter(q =>
+    selectedIds.has(q.about_player_id) && !G.usedQIds.has(q.id)
+  );
   if (available.length === 0) {
     alert('نفدت الأسئلة! ستبدأ الأسئلة من جديد.');
     G.usedQIds = new Set();
   }
-  const pool = G.allQuestions.filter(q => !G.usedQIds.has(q.id));
+  const pool = G.allQuestions.filter(q =>
+    selectedIds.has(q.about_player_id) && !G.usedQIds.has(q.id)
+  );
   if (pool.length === 0) { alert('لا توجد أسئلة!'); return; }
   const q = pool[Math.floor(Math.random() * pool.length)];
   G.usedQIds.add(q.id);
