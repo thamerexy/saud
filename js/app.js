@@ -520,16 +520,24 @@ function triggerSuddenDeath(players) {
 function showSuddenDeathQuestion() {
   soundClick(); initAudio();
   const selectedIds = new Set(G.selectedPlayers.map(p => p.id));
-  const available = G.allQuestions.filter(q =>
-    selectedIds.has(q.about_player_id) && !G.usedQIds.has(q.id)
+
+  // Try player-specific questions first, fallback to general
+  let pool = G.allQuestions.filter(q =>
+    q.about_player_id !== null &&
+    selectedIds.has(q.about_player_id) &&
+    !G.usedQIds.has(q.id)
   );
-  if (available.length === 0) {
-    alert('نفدت الأسئلة! ستبدأ الأسئلة من جديد.');
-    G.usedQIds = new Set();
+  if (!pool.length) {
+    pool = G.allQuestions.filter(q =>
+      q.about_player_id === null && !G.usedQIds.has(q.id)
+    );
   }
-  const pool = G.allQuestions.filter(q =>
-    selectedIds.has(q.about_player_id) && !G.usedQIds.has(q.id)
-  );
+  if (!pool.length) {
+    // All questions used — reset pool (general only to avoid repeating personal ones)
+    G.usedQIds = new Set();
+    pool = G.allQuestions.filter(q => q.about_player_id === null);
+    if (!pool.length) pool = G.allQuestions; // last resort
+  }
   if (pool.length === 0) { alert('لا توجد أسئلة!'); return; }
   const q = pool[Math.floor(Math.random() * pool.length)];
   G.usedQIds.add(q.id);
@@ -595,13 +603,23 @@ function doCancel() {
 // HELPERS
 // ════════════════════════════════════════════
 function pickQuestion(excludePlayerId) {
-  // Only use questions about players who are currently in this game
   const selectedIds = new Set(G.selectedPlayers.map(p => p.id));
-  const pool = G.allQuestions.filter(q =>
+
+  // 1st choice: player-specific questions about someone in this game
+  let pool = G.allQuestions.filter(q =>
+    q.about_player_id !== null &&
     q.about_player_id !== excludePlayerId &&
     selectedIds.has(q.about_player_id) &&
     !G.usedQIds.has(q.id)
   );
+
+  // Fallback: general questions (about_player_id is null)
+  if (!pool.length) {
+    pool = G.allQuestions.filter(q =>
+      q.about_player_id === null && !G.usedQIds.has(q.id)
+    );
+  }
+
   if (!pool.length) return null;
   return pool[Math.floor(Math.random() * pool.length)];
 }
