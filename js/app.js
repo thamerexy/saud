@@ -127,7 +127,7 @@ class Confetti {
 const WHEEL_COLORS = [
   '#E74C3C','#3498DB','#F39C12','#2ECC71',
   '#9B59B6','#E67E22','#1ABC9C','#E91E63',
-  '#00BCD4','#8BC34A','#FF5722',
+  '#F1C40F','#8BC34A','#FF5722','#00BCD4',
 ];
 
 class SpinningWheel {
@@ -190,16 +190,16 @@ class SpinningWheel {
     // Center circle
     ctx.beginPath();
     ctx.arc(cx, cy, 22, 0, 2 * Math.PI);
-    ctx.fillStyle = '#070714';
+    ctx.fillStyle = '#D94F2E';
     ctx.fill();
-    ctx.strokeStyle = '#FFD700';
-    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#F5C430';
+    ctx.lineWidth = 4;
     ctx.stroke();
-    ctx.fillStyle = '#FFD700';
+    ctx.fillStyle = '#F5C430';
     ctx.font = 'bold 14px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('⭐', cx, cy);
+    ctx.fillText('★', cx, cy);
     ctx.textBaseline = 'alphabetic';
 
     // Glow ring
