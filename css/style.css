@@ -344,6 +344,60 @@ body {
 .selection-info { font-size: clamp(13px, 3vmin, 17px); color: #fff; font-weight: 700; }
 #start-game-btn:disabled { opacity: 0.45; cursor: not-allowed; animation: none; transform: none !important; box-shadow: none; }
 
+/* ─── Quit Button ─── */
+.btn-quit {
+  font-family: var(--font);
+  background: rgba(255,255,255,0.25);
+  border: 2px solid rgba(255,255,255,0.4);
+  color: #fff;
+  font-size: clamp(11px, 2.5vmin, 14px);
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn-quit:hover { background: rgba(255,255,255,0.35); }
+.btn-quit:active { transform: scale(0.94); }
+.btn-quit-float {
+  align-self: flex-end;
+  margin-bottom: 4px;
+}
+
+/* ─── Quit Modal ─── */
+.quit-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200; padding: 24px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+  backdrop-filter: blur(6px);
+}
+.quit-modal-overlay.show { opacity: 1; pointer-events: all; }
+.quit-modal {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: clamp(24px, 6vmin, 36px) clamp(20px, 5vw, 30px);
+  max-width: 340px; width: 100%;
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  transform: scale(0.88);
+  transition: transform 0.25s cubic-bezier(0.34,1.4,0.64,1);
+}
+.quit-modal-overlay.show .quit-modal { transform: scale(1); }
+.quit-modal-icon { font-size: 52px; }
+.quit-modal-title { font-size: clamp(20px, 5vmin, 26px); font-weight: 900; color: var(--text); }
+.quit-modal-msg { font-size: clamp(13px, 3vmin, 16px); color: var(--text-muted); font-weight: 600; line-height: 1.5; }
+.quit-modal-buttons {
+  display: flex; gap: 12px; width: 100%;
+  flex-direction: column;
+}
+.quit-modal-buttons .btn { width: 100%; justify-content: center; }
+
 /* ─── Wheel Screen ─── */
 #screen-wheel { justify-content: space-between; padding: clamp(10px, 2.5vmin, 18px) 0; }
 .round-badge-container {

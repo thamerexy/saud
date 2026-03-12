@@ -78,6 +78,7 @@
     <div class="round-badge-container">
       <div class="round-badge" id="round-badge">الجولة 1</div>
       <div class="players-left" id="players-left">5 لاعبين</div>
+      <button class="btn-quit" onclick="askCancel()">✕ إنهاء</button>
     </div>
     <div class="wheel-area">
       <div class="wheel-wrapper">
@@ -97,6 +98,7 @@
   ══════════════════════════════════════════ -->
   <div id="screen-question" class="screen">
     <div class="question-header">
+      <button class="btn-quit btn-quit-float" onclick="askCancel()">✕ إنهاء</button>
       <div class="spotlight">
         <div class="spotlight-emoji" id="q-player-emoji">🎯</div>
         <div class="spotlight-name" id="q-player-name">اسم اللاعب</div>
@@ -132,6 +134,7 @@
   ══════════════════════════════════════════ -->
   <div id="screen-results" class="screen">
     <div class="results-header">
+      <button class="btn-quit btn-quit-float" onclick="askCancel()">✕ إنهاء</button>
       <div class="results-icon">📊</div>
       <h2 class="results-title" id="results-title">نتائج الجولة</h2>
     </div>
@@ -159,6 +162,7 @@
   ══════════════════════════════════════════ -->
   <div id="screen-sd-intro" class="screen">
     <div class="sd-intro-content">
+      <button class="btn-quit btn-quit-float" onclick="askCancel()">✕ إنهاء</button>
       <div class="sd-icon">⚡</div>
       <h1 class="sd-title">الجولة الحاسمة</h1>
       <p class="sd-subtitle">المواجهة الأخيرة — هل أنتم مستعدون؟</p>
@@ -173,6 +177,7 @@
        SCREEN 7: SUDDEN DEATH QUESTION
   ══════════════════════════════════════════ -->
   <div id="screen-sd-question" class="screen">
+    <button class="btn-quit btn-quit-float" onclick="askCancel()" style="position:absolute;top:16px;left:16px;z-index:10">✕ إنهاء</button>
     <div class="sd-question-header">
       <span class="sd-badge">⚡ الجولة الحاسمة</span>
     </div>
@@ -204,6 +209,19 @@
   </div>
 
 </div><!-- #app -->
+
+<!-- Quit Confirmation Modal -->
+<div id="quit-modal" class="quit-modal-overlay" onclick="closeQuitModal()">
+  <div class="quit-modal" onclick="event.stopPropagation()">
+    <div class="quit-modal-icon">⚠️</div>
+    <h3 class="quit-modal-title">إنهاء اللعبة؟</h3>
+    <p class="quit-modal-msg">سيتم إلغاء الجولة الحالية وفقدان تقدم جميع اللاعبين</p>
+    <div class="quit-modal-buttons">
+      <button class="btn btn-primary" onclick="closeQuitModal()">▶ متابعة اللعبة</button>
+      <button class="btn btn-danger" onclick="doCancel()">✕ إنهاء</button>
+    </div>
+  </div>
+</div>
 
 <!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

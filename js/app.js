@@ -580,6 +580,17 @@ function resetGame() {
   showScreen('home');
 }
 
+function askCancel() {
+  document.getElementById('quit-modal').classList.add('show');
+}
+function closeQuitModal() {
+  document.getElementById('quit-modal').classList.remove('show');
+}
+function doCancel() {
+  closeQuitModal();
+  resetGame();
+}
+
 // ════════════════════════════════════════════
 // HELPERS
 // ════════════════════════════════════════════
