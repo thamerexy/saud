@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#070714">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="سعود">
+  <meta name="description" content="لعبة أسئلة تنافسية بالإقصاء بين الأصدقاء والعائلة">
+  <title>سعود - لعبة الأسئلة</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 1: HOME
+  ══════════════════════════════════════════ -->
+  <div id="screen-home" class="screen active">
+    <div class="stars"></div>
+    <div class="screen-content home-content">
+      <div class="game-logo-container">
+        <div class="game-logo-ring">
+          <span class="game-logo-emoji">🎯</span>
+        </div>
+      </div>
+      <h1 class="game-title">سعود</h1>
+      <p class="game-subtitle">لعبة الأسئلة التنافسية</p>
+      <div class="home-stats">
+        <div class="stat-item"><span class="stat-icon">👥</span><span>11 لاعب</span></div>
+        <div class="stat-item"><span class="stat-icon">🎰</span><span>عجلة الحظ</span></div>
+        <div class="stat-item"><span class="stat-icon">⚡</span><span>سؤال الموت</span></div>
+      </div>
+      <button class="btn btn-primary btn-large" id="start-btn" onclick="showPlayersScreen()">
+        ابدأ اللعبة 🚀
+      </button>
+    </div>
+    <div class="loading-overlay" id="loading-overlay">
+      <div class="loading-spinner"></div>
+      <p>جاري تحميل اللعبة...</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 2: PLAYER SELECTION
+  ══════════════════════════════════════════ -->
+  <div id="screen-players" class="screen">
+    <div class="screen-header">
+      <button class="btn-back" onclick="showScreen('home'); soundClick(); initAudio();">← رجوع</button>
+      <h2 class="screen-title">اختر المشاركين</h2>
+      <p class="screen-subtitle">اختر من سيلعب اليوم (3 على الأقل)</p>
+    </div>
+    <div class="players-grid" id="players-grid"></div>
+    <div class="screen-footer">
+      <div class="selection-info">
+        <span id="selected-count">0</span> مشاركين مختارين
+      </div>
+      <button class="btn btn-primary btn-large" id="start-game-btn" onclick="startGame()" disabled>
+        ابدأ الجولة الأولى 🚀
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 3: WHEEL SPIN
+  ══════════════════════════════════════════ -->
+  <div id="screen-wheel" class="screen">
+    <div class="round-badge-container">
+      <div class="round-badge" id="round-badge">الجولة 1</div>
+      <div class="players-left" id="players-left">5 لاعبين</div>
+    </div>
+    <div class="wheel-area">
+      <div class="wheel-wrapper">
+        <div class="wheel-pointer">▼</div>
+        <canvas id="wheel-canvas"></canvas>
+      </div>
+    </div>
+    <div class="wheel-footer">
+      <button class="btn btn-spin" id="spin-btn" onclick="spinWheel()">
+        🎰 أَدِر العجلة
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 4: QUESTION
+  ══════════════════════════════════════════ -->
+  <div id="screen-question" class="screen">
+    <div class="question-header">
+      <div class="spotlight">
+        <div class="spotlight-emoji" id="q-player-emoji">🎯</div>
+        <div class="spotlight-name" id="q-player-name">اسم اللاعب</div>
+      </div>
+      <div class="question-about-label">حان دوره في الإجابة!</div>
+    </div>
+    <div class="question-card-wrapper">
+      <div class="question-label">ـ السـؤال ـ</div>
+      <div class="question-card">
+        <p class="question-text" id="question-text">...</p>
+      </div>
+    </div>
+    <div class="answer-section">
+      <p class="answer-instruction">الجمهور يقرر الإجابة</p>
+      <div class="answer-buttons">
+        <button class="btn btn-wrong" id="btn-wrong" onclick="handleAnswer(false)">
+          <span class="answer-icon">❌</span>
+          <span class="answer-label">خطأ</span>
+        </button>
+        <button class="btn btn-correct" id="btn-correct" onclick="handleAnswer(true)">
+          <span class="answer-icon">✅</span>
+          <span class="answer-label">صحيح</span>
+        </button>
+      </div>
+    </div>
+    <div class="feedback-overlay" id="feedback-overlay">
+      <div class="feedback-content" id="feedback-content"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 5: ROUND RESULTS
+  ══════════════════════════════════════════ -->
+  <div id="screen-results" class="screen">
+    <div class="results-header">
+      <div class="results-icon">📊</div>
+      <h2 class="results-title" id="results-title">نتائج الجولة</h2>
+    </div>
+    <div class="results-grid">
+      <div class="results-col">
+        <div class="col-header qualified-header">
+          <span>✅</span><h3>تأهلوا</h3>
+        </div>
+        <ul class="results-list" id="qualified-list"></ul>
+      </div>
+      <div class="results-col">
+        <div class="col-header eliminated-header">
+          <span>❌</span><h3>خرجوا</h3>
+        </div>
+        <ul class="results-list" id="eliminated-list"></ul>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-glow btn-large" onclick="nextRound()">
+      الجولة التالية ➡️
+    </button>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 6: SUDDEN DEATH INTRO
+  ══════════════════════════════════════════ -->
+  <div id="screen-sd-intro" class="screen">
+    <div class="sd-intro-content">
+      <div class="sd-icon">⚡</div>
+      <h1 class="sd-title">سؤال الموت المفاجئ</h1>
+      <p class="sd-subtitle">المواجهة الأخيرة — هل أنتم مستعدون؟</p>
+      <div class="sd-players-intro" id="sd-players-intro"></div>
+      <button class="btn btn-danger btn-large" onclick="showSuddenDeathQuestion()">
+        🔥 أظهر السؤال
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 7: SUDDEN DEATH QUESTION
+  ══════════════════════════════════════════ -->
+  <div id="screen-sd-question" class="screen">
+    <div class="sd-question-header">
+      <span class="sd-badge">⚡ سؤال الموت المفاجئ</span>
+    </div>
+    <div class="question-card-wrapper" style="flex:1">
+      <div class="question-card sd-card">
+        <p class="question-text" id="sd-question-text">...</p>
+      </div>
+    </div>
+    <div class="answer-section">
+      <p class="answer-instruction">الجمهور يقرر من أجاب أولاً — انقر على الفائز</p>
+      <div class="sd-answer-buttons" id="sd-answer-buttons"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 8: WINNER
+  ══════════════════════════════════════════ -->
+  <div id="screen-winner" class="screen">
+    <canvas id="confetti-canvas"></canvas>
+    <div class="winner-content">
+      <div class="trophy-emoji">🏆</div>
+      <div class="winner-label">الـفـائـز</div>
+      <div class="winner-name" id="winner-name">سعود</div>
+      <div class="winner-emoji" id="winner-emoji">👑</div>
+      <button class="btn btn-primary btn-large" onclick="resetGame()">
+        🔄 العب مجدداً
+      </button>
+    </div>
+  </div>
+
+</div><!-- #app -->
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

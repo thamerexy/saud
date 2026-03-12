@@ -1,0 +1,16 @@
+{
+  "name": "سعود - لعبة الأسئلة",
+  "short_name": "سعود",
+  "description": "لعبة أسئلة تنافسية بالإقصاء بين الأصدقاء والعائلة",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#070714",
+  "theme_color": "#070714",
+  "orientation": "any",
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
