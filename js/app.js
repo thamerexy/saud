@@ -140,7 +140,7 @@ class SpinningWheel {
     this.selectedIdx = -1;
   }
 
-  setPlayers(players) { this.players = players; this.draw(); }
+  setPlayers(players) { this.players = [...players]; this.draw(); }
 
   draw() {
     const ctx = this.ctx;
@@ -339,8 +339,14 @@ function startGame() {
 
 function startRound() {
   G.qualifiedPlayers = [];
+  // Reset wheel angle to 0 so new segment count aligns correctly
+  if (G.wheel) G.wheel.angle = 0;
   renderWheel();
   updateRoundUI();
+  // Always re-enable spin button (may have been disabled from previous round)
+  const spinBtn = document.getElementById('spin-btn');
+  spinBtn.disabled = false;
+  spinBtn.textContent = '🎰 أَدِر العجلة';
   showScreen('wheel');
 }
 
