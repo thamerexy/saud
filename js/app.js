@@ -579,8 +579,12 @@ function resetGame() {
 // HELPERS
 // ════════════════════════════════════════════
 function pickQuestion(excludePlayerId) {
+  // Only use questions about players who are currently in this game
+  const selectedIds = new Set(G.selectedPlayers.map(p => p.id));
   const pool = G.allQuestions.filter(q =>
-    q.about_player_id !== excludePlayerId && !G.usedQIds.has(q.id)
+    q.about_player_id !== excludePlayerId &&
+    selectedIds.has(q.about_player_id) &&
+    !G.usedQIds.has(q.id)
   );
   if (!pool.length) return null;
   return pool[Math.floor(Math.random() * pool.length)];
