@@ -219,27 +219,28 @@ class SpinningWheel {
     this.spinning = true;
     soundSpin();
 
-    // Pre-select randomly
+    // Pick the winner
     this.selectedIdx = Math.floor(Math.random() * this.players.length);
     const seg = (2 * Math.PI) / this.players.length;
 
-    // Target: selected segment center must be at TOP (angle = -π/2)
-    // finalAngle + selectedIdx*seg + seg/2 ≡ -π/2  (mod 2π)
-    // → finalAngle ≡ -π/2 - selectedIdx*seg - seg/2  (mod 2π)
-    const targetMod = ((-Math.PI / 2 - this.selectedIdx * seg - seg / 2) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
-    const currentMod = ((this.angle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+    // Normalize current angle to [0, 2π) to prevent floating-point drift
+    this.angle = ((this.angle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
 
-    // Clockwise rotation needed to reach target from current position
-    let deltaRot = (targetMod - currentMod + 2 * Math.PI) % (2 * Math.PI);
-    if (deltaRot < 0.01) deltaRot += 2 * Math.PI; // force at least one rotation
+    // Target: winner segment center must land at TOP of wheel (−π/2 = 3π/2)
+    // finalAngle + selectedIdx*seg + seg/2 ≡ 3π/2  (mod 2π)
+    const targetMod = (((3 * Math.PI / 2) - this.selectedIdx * seg - seg / 2) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
 
-    // Add EXACT integer extra full rotations (5-9) to make it spin nicely
-    // MUST be integer to preserve landing accuracy
+    // Clockwise delta from current normalized angle to target (always 0..2π)
+    let deltaRot = (targetMod - this.angle + 2 * Math.PI) % (2 * Math.PI);
+    if (deltaRot < 0.01) deltaRot += 2 * Math.PI; // ensure at least one small rotation
+
+    // Add exact integer extra full rotations (5–9 spins)
     const extraFullRotations = 5 + Math.floor(Math.random() * 5);
     const totalRot = deltaRot + extraFullRotations * 2 * Math.PI;
 
-    const duration = 4000;
     const startAngle = this.angle;
+    const finalAngle = startAngle + totalRot;
+    const duration = 4000;
     const start = performance.now();
 
     const animate = (ts) => {
@@ -250,6 +251,9 @@ class SpinningWheel {
       if (progress < 1) {
         requestAnimationFrame(animate);
       } else {
+        // Snap to exact final angle to avoid float error
+        this.angle = finalAngle;
+        this.draw();
         this.spinning = false;
         onComplete(this.players[this.selectedIdx]);
       }
@@ -361,10 +365,10 @@ function startRound() {
 function renderWheel() {
   const canvas = document.getElementById('wheel-canvas');
   const wrapper = canvas.parentElement;
-  const size = Math.min(wrapper.clientWidth, wrapper.clientHeight) || 360;
+  const size = Math.min(wrapper.clientWidth, wrapper.clientHeight) || 380;
   canvas.width = size; canvas.height = size;
-  if (!G.wheel) G.wheel = new SpinningWheel(canvas);
-  else { G.wheel.canvas = canvas; G.wheel.ctx = canvas.getContext('2d'); }
+  // Always create a fresh wheel object — never reuse stale spinning/context state
+  G.wheel = new SpinningWheel(canvas);
   G.wheel.setPlayers(G.activePlayers);
 }
 
