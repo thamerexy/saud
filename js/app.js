@@ -223,12 +223,20 @@ class SpinningWheel {
     this.selectedIdx = Math.floor(Math.random() * this.players.length);
     const seg = (2 * Math.PI) / this.players.length;
 
-    // Target: selected segment center at top (−π/2)
-    const targetSegCenter = this.selectedIdx * seg + seg / 2;
-    const targetAngle = -Math.PI / 2 - targetSegCenter;
-    const extra = (5 + Math.random() * 5) * 2 * Math.PI;
-    const delta = ((targetAngle - this.angle) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
-    const totalRot = extra + delta;
+    // Target: selected segment center must be at TOP (angle = -π/2)
+    // finalAngle + selectedIdx*seg + seg/2 ≡ -π/2  (mod 2π)
+    // → finalAngle ≡ -π/2 - selectedIdx*seg - seg/2  (mod 2π)
+    const targetMod = ((-Math.PI / 2 - this.selectedIdx * seg - seg / 2) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+    const currentMod = ((this.angle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+
+    // Clockwise rotation needed to reach target from current position
+    let deltaRot = (targetMod - currentMod + 2 * Math.PI) % (2 * Math.PI);
+    if (deltaRot < 0.01) deltaRot += 2 * Math.PI; // force at least one rotation
+
+    // Add EXACT integer extra full rotations (5-9) to make it spin nicely
+    // MUST be integer to preserve landing accuracy
+    const extraFullRotations = 5 + Math.floor(Math.random() * 5);
+    const totalRot = deltaRot + extraFullRotations * 2 * Math.PI;
 
     const duration = 4000;
     const startAngle = this.angle;
@@ -487,6 +495,10 @@ function nextRound() {
   G.activePlayers = [...G.qualifiedPlayers];
   G.qualifiedPlayers = [];
   G.currentRound++;
+  // Re-enable spin button here too (belt-and-suspenders for caching)
+  const btn = document.getElementById('spin-btn');
+  btn.disabled = false;
+  btn.textContent = '🎰 أَدِر العجلة';
   startRound();
 }
 
