@@ -105,6 +105,10 @@ body {
   filter: drop-shadow(0 6px 16px rgba(0,0,0,0.25));
   animation: logo-bob 2s ease-in-out infinite;
 }
+@keyframes logo-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
 
 .game-logo-text {
   display: flex; flex-direction: column; align-items: center; gap: 4px;
@@ -490,6 +494,38 @@ body {
   font-weight: 800; line-height: 1.6;
   text-align: center; color: var(--text);
 }
+
+/* ─── Timer Bar ─── */
+.timer-bar {
+  width: 100%; height: 8px;
+  background: rgba(0,0,0,0.12);
+  border-radius: 4px; overflow: hidden;
+  margin-bottom: 2px;
+}
+.timer-fill {
+  height: 100%; border-radius: 4px;
+  background: linear-gradient(90deg, #E74C3C 0%, #F39C12 50%, #2ECC71 100%);
+  width: 100%;
+}
+
+/* ─── Change Question Button (Deciding Round) ─── */
+.btn-change-q {
+  font-family: var(--font);
+  background: rgba(255,255,255,0.18);
+  border: 2px solid rgba(255,255,255,0.35);
+  color: #fff;
+  font-size: clamp(13px, 3vmin, 17px);
+  font-weight: 700;
+  padding: 10px 24px;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-top: 4px;
+  -webkit-tap-highlight-color: transparent;
+  display: block; width: 100%;
+}
+.btn-change-q:hover { background: rgba(255,255,255,0.28); }
+.btn-change-q:active { transform: scale(0.95); }
 .answer-section { width: 100%; display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 1; }
 .answer-instruction { font-size: clamp(12px, 3vmin, 16px); color: rgba(255,255,255,0.85); text-align: center; font-weight: 700; }
 .answer-buttons { display: flex; gap: clamp(10px, 3vw, 16px); width: 100%; }
