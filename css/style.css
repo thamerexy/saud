@@ -98,22 +98,13 @@ body {
   height: clamp(100px, 25vmin, 140px);
   display: flex; align-items: center; justify-content: center;
 }
-.game-logo-ring {
-  width: 100%; height: 100%;
-  border-radius: 50%;
-  background: var(--gold);
-  display: flex; align-items: center; justify-content: center;
-  box-shadow:
-    0 8px 0 var(--gold-shadow),
-    0 12px 24px rgba(0,0,0,0.25),
-    inset 0 3px 0 var(--gold-shine);
+.game-logo-img {
+  width: clamp(80px, 22vmin, 130px);
+  height: clamp(80px, 22vmin, 130px);
+  object-fit: contain;
+  filter: drop-shadow(0 6px 16px rgba(0,0,0,0.25));
   animation: logo-bob 2s ease-in-out infinite;
 }
-@keyframes logo-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-.game-logo-emoji { font-size: clamp(40px, 10vmin, 60px); }
 
 .game-logo-text {
   display: flex; flex-direction: column; align-items: center; gap: 4px;

@@ -23,6 +23,7 @@ const G = {
   wheel: null,
   confetti: null,
   audioCtx: null,
+  questionTimer: null,   // countdown timer handle
 };
 
 // ════════════════════════════════════════════
@@ -401,7 +402,6 @@ function showQuestionFor(player) {
   G.currentPlayer = player;
   const q = pickQuestion(player.id);
   if (!q) {
-    // No questions left — treat as no-answer, just continue
     alert('لا توجد أسئلة متاحة! سيتم المرور على هذا اللاعب.');
     G.qualifiedPlayers.push(player);
     checkState();
@@ -424,10 +424,12 @@ function showQuestionFor(player) {
   document.getElementById('btn-wrong').disabled = false;
   document.getElementById('btn-correct').disabled = false;
   showScreen('question');
+  startTimer();
 }
 
 function handleAnswer(correct) {
   initAudio();
+  clearTimer(); // stop countdown
   document.getElementById('btn-wrong').disabled = true;
   document.getElementById('btn-correct').disabled = true;
 
@@ -519,24 +521,26 @@ function triggerSuddenDeath(players) {
 
 function showSuddenDeathQuestion() {
   soundClick(); initAudio();
-  const selectedIds = new Set(G.selectedPlayers.map(p => p.id));
+  const finalIds = new Set(G.suddenDeathPlayers.map(p => p.id));
 
-  // Try player-specific questions first, fallback to general
+  // Priority 1: general questions (about_player_id = null) — best for deciding round
   let pool = G.allQuestions.filter(q =>
-    q.about_player_id !== null &&
-    selectedIds.has(q.about_player_id) &&
-    !G.usedQIds.has(q.id)
+    q.about_player_id === null && !G.usedQIds.has(q.id)
   );
+  // Priority 2: questions about players NOT in the final two
   if (!pool.length) {
     pool = G.allQuestions.filter(q =>
-      q.about_player_id === null && !G.usedQIds.has(q.id)
+      q.about_player_id !== null &&
+      !finalIds.has(q.about_player_id) &&
+      !G.usedQIds.has(q.id)
     );
   }
+  // Last resort: reset used questions and try again
   if (!pool.length) {
-    // All questions used — reset pool (general only to avoid repeating personal ones)
     G.usedQIds = new Set();
     pool = G.allQuestions.filter(q => q.about_player_id === null);
-    if (!pool.length) pool = G.allQuestions; // last resort
+    if (!pool.length) pool = G.allQuestions.filter(q => !finalIds.has(q.about_player_id));
+    if (!pool.length) pool = G.allQuestions;
   }
   if (pool.length === 0) { alert('لا توجد أسئلة!'); return; }
   const q = pool[Math.floor(Math.random() * pool.length)];
@@ -551,6 +555,39 @@ function showSuddenDeathQuestion() {
   `).join('');
   showScreen('sd-question');
 }
+
+function changeSuddenDeathQuestion() {
+  soundClick(); initAudio();
+  showSuddenDeathQuestion();
+}
+
+// ────── Timer ──────
+function startTimer() {
+  clearTimer();
+  const fill = document.getElementById('timer-fill');
+  if (!fill) return;
+  // Reset bar to full width instantly (no transition)
+  fill.style.transition = 'none';
+  fill.style.width = '100%';
+  // Force reflow so the reset takes effect
+  fill.getBoundingClientRect();
+  // Animate to 0 over 20 seconds
+  fill.style.transition = 'width 20s linear';
+  fill.style.width = '0%';
+  // Play a warning sound at 5 seconds remaining
+  G.questionTimer = setTimeout(() => {
+    playTone(440, 'sine', 0.3, 0, 0.2);
+    playTone(440, 'sine', 0.3, 0.4, 0.2);
+    playTone(440, 'sine', 0.3, 0.8, 0.2);
+  }, 15000);
+}
+
+function clearTimer() {
+  if (G.questionTimer) { clearTimeout(G.questionTimer); G.questionTimer = null; }
+  const fill = document.getElementById('timer-fill');
+  if (fill) { fill.style.transition = 'none'; fill.style.width = '0%'; }
+}
+
 
 function handleSdWinner(playerId) {
   initAudio();

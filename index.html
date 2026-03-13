@@ -28,9 +28,7 @@
     <div class="stars"></div>
     <div class="screen-content home-content">
       <div class="game-logo-container">
-        <div class="game-logo-ring">
-          <span class="game-logo-emoji">🎯</span>
-        </div>
+        <img src="icons/logo.png" alt="سؤال مع سعود" class="game-logo-img">
       </div>
       <div class="game-logo-text">
         <div class="logo-main">سؤال</div>
@@ -107,6 +105,8 @@
     </div>
     <div class="question-card-wrapper">
       <div class="question-label">ـ السـؤال ـ</div>
+      <!-- 20-second countdown timer -->
+      <div class="timer-bar"><div class="timer-fill" id="timer-fill"></div></div>
       <div class="question-card">
         <p class="question-text" id="question-text">...</p>
       </div>
@@ -189,6 +189,7 @@
     <div class="answer-section">
       <p class="answer-instruction">الجمهور يقرر من أجاب أولاً — انقر على الفائز</p>
       <div class="sd-answer-buttons" id="sd-answer-buttons"></div>
+      <button class="btn-change-q" onclick="changeSuddenDeathQuestion()">🔄 تغيير السؤال</button>
     </div>
   </div>
 
